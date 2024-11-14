@@ -29,7 +29,7 @@ build_release/CMakeCache.txt: cmake-release
 # Build using cmake
 .PHONY: build-debug build-release
 build-debug build-release: build-%: build_%/CMakeCache.txt
-	cmake --build build_$* -j $(NPROCS) --target service_template
+	cmake --build build_$* -j $(NPROCS) --target config-update-printer
 
 # Test
 .PHONY: test-debug test-release
@@ -40,7 +40,7 @@ test-debug test-release: test-%: build-%
 # Start the service (via testsuite service runner)
 .PHONY: start-debug start-release
 start-debug start-release: start-%:
-	cmake --build build_$* -v --target=start-service_template
+	cmake --build build_$* -v --target=start-config-update-printer
 
 .PHONY: service-start-debug service-start-release
 service-start-debug service-start-release: service-start-%: start-%
@@ -59,7 +59,7 @@ dist-clean:
 # Install
 .PHONY: install-debug install-release
 install-debug install-release: install-%: build-%
-	cmake --install build_$* -v --component service_template
+	cmake --install build_$* -v --component config-update-printer
 
 .PHONY: install
 install: install-release
@@ -73,14 +73,14 @@ format:
 # Internal hidden targets that are used only in docker environment
 .PHONY: --in-docker-start-debug --in-docker-start-release
 --in-docker-start-debug --in-docker-start-release: --in-docker-start-%: install-%
-	/home/user/.local/bin/service_template \
-		--config /home/user/.local/etc/service_template/static_config.yaml \
-		--config_vars /home/user/.local/etc/service_template/config_vars.yaml
+	/home/user/.local/bin/config-update-printer \
+		--config /home/user/.local/etc/config-update-printer/static_config.yaml \
+		--config_vars /home/user/.local/etc/config-update-printer/config_vars.yaml
 
 # Build and run service in docker environment
 .PHONY: docker-start-debug docker-start-release
 docker-start-debug docker-start-release: docker-start-%:
-	$(DOCKER_COMPOSE) run -p 8080:8080 --rm service_template-container make -- --in-docker-start-$*
+	$(DOCKER_COMPOSE) run -p 8080:8080 --rm config-update-printer-container make -- --in-docker-start-$*
 
 .PHONY: docker-start-service-debug docker-start-service-release
 docker-start-service-debug docker-start-service-release: docker-start-service-%: docker-start-%
@@ -88,7 +88,7 @@ docker-start-service-debug docker-start-service-release: docker-start-service-%:
 # Start specific target in docker environment
 .PHONY: docker-cmake-debug docker-build-debug docker-test-debug docker-clean-debug docker-install-debug docker-cmake-release docker-build-release docker-test-release docker-clean-release docker-install-release
 docker-cmake-debug docker-build-debug docker-test-debug docker-clean-debug docker-install-debug docker-cmake-release docker-build-release docker-test-release docker-clean-release docker-install-release: docker-%:
-	$(DOCKER_COMPOSE) run --rm service_template-container make $*
+	$(DOCKER_COMPOSE) run --rm config-update-printer-container make $*
 
 # Stop docker container and cleanup data
 .PHONY: docker-clean-data
