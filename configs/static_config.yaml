@@ -10,6 +10,7 @@ components_manager:
     default_task_processor: main-task-processor
 
     components:                       # Configuring components that were registered via component_list
+        dynamic-config-printer:
         server:
             listener:                 # configuring the main listening socket...
                 port: $server-port            # ...to listen on this port and...
