@@ -9,8 +9,6 @@
 #include <userver/testsuite/testsuite_support.hpp>
 #include <userver/utils/daemon_run.hpp>
 
-#include "hello.hpp"
-
 namespace {
 
 inline const userver::dynamic_config::Key kConfig{
@@ -47,8 +45,5 @@ int main(int argc, char* argv[]) {
                             .Append<userver::clients::dns::Component>()
                             .Append<userver::server::handlers::TestsControl>()
                             .Append<DynamicConfigPrinter>();
-
-  service_template::AppendHello(component_list);
-
   return userver::utils::DaemonMain(argc, argv, component_list);
 }
