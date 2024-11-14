@@ -21,14 +21,22 @@ components_manager:
                 default:
                     file_path: '@stderr'
                     level: $logger-level
-                    overflow_behavior: discard  # Drop logs if the system is too busy to write them down.
-
-        # Dynamic config options. Cache is disabled, updates are disabled.
+                    overflow_behavior: discard  # Drop logs if the system is too busy to write them down. 
         dynamic-config:
-            # For most of userver dynamic configs, defaults are used, some are overridden here.
-            # See userver "dynamic config" docs for what configs exist.
+            updates-enabled: true
+            fs-task-processor: fs-task-processor
             defaults:
                 HTTP_CLIENT_CONNECTION_POOL_SIZE: 1000
+        dynamic-config-client:
+            config-url: $config-server-url
+            http-retries: 5
+            http-timeout: 20s
+            service-name: $service-name
+        dynamic-config-client-updater:
+            config-settings: false
+            first-update-fail-ok: true
+            full-update-interval: 1m
+            update-interval: 500ms
 
         testsuite-support: {}
 

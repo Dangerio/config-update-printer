@@ -1,3 +1,5 @@
+service-name: config-update-printer
+
 worker-threads: 4
 worker-fs-threads: 2
 logger-level: debug
@@ -5,3 +7,4 @@ logger-level: debug
 is_testing: true
 
 server-port: 8080
+config-server-url: http://localhost:8083
